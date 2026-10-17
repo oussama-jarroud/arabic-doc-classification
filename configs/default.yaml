@@ -1,0 +1,94 @@
+# Central configuration for Arabic Document Classification (SANAD Khaleej Benchmark)
+
+dataset:
+  dataset_root: "data/raw"
+  split_file: "splits/split_seed42.json"
+  expected_raw_per_class: 6500
+  categories:
+    - "Culture"
+    - "Finance"
+    - "Medical"
+    - "Politics"
+    - "Religion"
+    - "Sports"
+    - "Tech"
+  split_ratios:
+    dev: 0.80
+    test: 0.20
+  cv_folds: 5
+  seed: 42
+  processed_dir: "data/processed"
+
+preprocessing:
+  target_pipelines:
+    - "light_normalized"
+    - "paper_heavy_stemming"
+  serialization_format: "joblib"
+  metadata_file: "results/preprocessing_metadata.json"
+
+eda:
+  class_summary_csv: "results/eda_class_summary.csv"
+  top_terms_csv: "results/eda_top_terms.csv"
+  class_counts_plot: "results/figures/class_counts_and_duplicates.png"
+  doc_length_plot: "results/figures/doc_length_distribution.png"
+
+preprocessing_pipelines:
+  raw_char:
+    - "remove_diacritics"
+    - "remove_tatweel"
+  light_normalized:
+    - "remove_diacritics"
+    - "remove_tatweel"
+    - "normalize_hamza_alef"
+    - "remove_non_arabic_punct"
+    - "remove_stopwords"
+  paper_heavy_stemming:
+    - "remove_diacritics"
+    - "remove_tatweel"
+    - "normalize_hamza_alef"
+    - "remove_non_arabic_punct"
+    - "remove_stopwords"
+    - "isri_stem"
+
+features:
+  bow:
+    max_features: 50000
+    min_df: 2
+  tfidf:
+    max_features: 50000
+    min_df: 2
+    sublinear_tf: true
+  tfidf_char_wb:
+    analyzer: "char_wb"
+    ngram_range: [3, 5]
+    max_features: 75000
+    min_df: 3
+    sublinear_tf: true
+
+classical_models:
+  MultinomialNB:
+    alpha: 1.0
+  BernoulliNB:
+    alpha: 1.0
+  LogisticRegression:
+    C: 1.0
+    max_iter: 1000
+    random_state: 42
+  SGDClassifier:
+    loss: "hinge"
+    alpha: 0.0001
+    max_iter: 1000
+    random_state: 42
+  LinearSVC:
+    C: 1.0
+    random_state: 42
+  SVC:
+    kernel: "rbf"
+    C: 1.0
+    max_iter: 2000
+    random_state: 42
+
+classical_experiments:
+  results_csv: "results/results_classical.csv"
+  models_dir: "models_saved"
+
