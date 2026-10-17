@@ -1,4 +1,4 @@
-# Arabic Document Classification — PFE Research Benchmark
+# Arabic Document Classification — Research Benchmark
 
 Reproduction, critique, and extension of Muaad et al. (2022) on the Khaleej (SANAD) dataset (7 categories, 45,500 Arabic news articles).
 
