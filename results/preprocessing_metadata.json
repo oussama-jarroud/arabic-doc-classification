@@ -1,0 +1,26 @@
+{
+  "generated_at": "2026-10-17T17:50:11.044527+00:00",
+  "split_file": "splits/split_seed42.json",
+  "dev_document_count": 36388,
+  "test_document_count": 9097,
+  "pipelines": {
+    "light_normalized": {
+      "dev_file": "data/processed/light_normalized_dev.joblib",
+      "test_file": "data/processed/light_normalized_test.joblib",
+      "dev_size_mb": 35.63,
+      "test_size_mb": 8.85,
+      "dev_time_sec": 10.58,
+      "test_time_sec": 1.28,
+      "total_time_sec": 11.86
+    },
+    "paper_heavy_stemming": {
+      "dev_file": "data/processed/paper_heavy_stemming_dev.joblib",
+      "test_file": "data/processed/paper_heavy_stemming_test.joblib",
+      "dev_size_mb": 23.5,
+      "test_size_mb": 5.83,
+      "dev_time_sec": 17.56,
+      "test_time_sec": 4.67,
+      "total_time_sec": 22.22
+    }
+  }
+}
