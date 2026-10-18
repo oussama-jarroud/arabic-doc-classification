@@ -19,7 +19,7 @@ from src.eval.metrics import (
     log_result,
     measure_inference_latency_ms_per_doc,
 )
-from src.features import build_vectorizer
+from src.features import build_dim_reduction, build_vectorizer
 
 MODEL_REGISTRY: dict[str, type[BaseEstimator]] = {
     "MultinomialNB": MultinomialNB,
@@ -62,37 +62,54 @@ def build_classical_pipeline(
     config: dict[str, Any] | Path | str | None = None,
     vec_kwargs: dict[str, Any] | None = None,
     model_kwargs: dict[str, Any] | None = None,
+    dim_reduction: str | None = None,
+    dim_kwargs: dict[str, Any] | None = None,
 ) -> Pipeline:
-    """Compose a feature extraction vectorizer and classical classifier into a single pipeline.
+    """Compose feature extraction, optional dimension reduction, and classifier into a pipeline.
 
     Encapsulates text transformation and classification into a unified estimator to prevent
     information leakage during cross-validation.
     """
     vec = build_vectorizer(representation, config, **(vec_kwargs or {}))
+    steps: list[tuple[str, Any]] = [("vectorizer", vec)]
+
+    if dim_reduction and dim_reduction.lower() != "none":
+        dim_trans = build_dim_reduction(dim_reduction, config, **(dim_kwargs or {}))
+        if dim_trans is not None:
+            steps.append(("dim_reduction", dim_trans))
+
     clf = build_classical_model(model_name, config, **(model_kwargs or {}))
-    return Pipeline([("vectorizer", vec), ("clf", clf)])
+    steps.append(("clf", clf))
+
+    return Pipeline(steps)
 
 
 def run_cross_validation_single(
     pipeline_name: str,
     representation: str,
     model_name: str,
+    dim_reduction: str = "none",
     config: dict[str, Any] | Path | str | None = None,
     project_root: Path | None = None,
     save_best_model: bool = True,
+    results_csv: Path | str | None = None,
 ) -> list[dict[str, Any]]:
     """Execute leak-free 5-Fold Stratified Cross-Validation strictly within the dev partition.
 
-    Trains the complete vectorizer and classifier pipeline per fold, benchmarks metrics and
-    inference latency, logs records to CSV, and saves the top-performing pipeline.
+    Trains the complete vectorizer, optional dimension reduction, and classifier pipeline per fold,
+    benchmarks metrics and inference latency, logs records to CSV, and saves the top pipeline.
     """
     cfg = load_config(config) if isinstance(config, (str, Path)) or config is None else config
     root = Path.cwd() if project_root is None else Path(project_root)
 
     exp_cfg = cfg.get("classical_experiments", {})
-    results_csv_rel = exp_cfg.get("results_csv", "results/results_classical.csv")
+    if results_csv is None:
+        results_csv_rel = exp_cfg.get("results_csv", "results/results_classical.csv")
+        target_csv = root / results_csv_rel
+    else:
+        target_csv = Path(results_csv) if Path(results_csv).is_absolute() else root / results_csv
+
     models_dir_rel = exp_cfg.get("models_dir", "models_saved")
-    results_csv = root / results_csv_rel
     models_dir = root / models_dir_rel
 
     seed = int(cfg["dataset"]["seed"])
@@ -119,7 +136,12 @@ def run_cross_validation_single(
         fold_val_labels: Sequence[int] = labels_arr[val_idx].tolist()
 
         # Build clean un-fitted pipeline strictly inside fold
-        pipeline = build_classical_pipeline(representation, model_name, config=cfg)
+        pipeline = build_classical_pipeline(
+            representation=representation,
+            model_name=model_name,
+            dim_reduction=dim_reduction,
+            config=cfg,
+        )
 
         start_train = time.perf_counter()
         pipeline.fit(fold_train_texts, fold_train_labels)
@@ -129,13 +151,13 @@ def run_cross_validation_single(
         metrics = compute_classification_metrics(fold_val_labels, val_preds)
         inference_ms = measure_inference_latency_ms_per_doc(pipeline, fold_val_texts)
 
-        run_id = f"{model_name}_{representation}_{pipeline_name}_fold{fold_idx}"
+        run_id = f"{model_name}_{representation}_{dim_reduction}_{pipeline_name}_fold{fold_idx}"
 
         row: dict[str, Any] = {
             "run_id": run_id,
             "model": model_name,
             "representation": representation,
-            "dim_reduction": "none",
+            "dim_reduction": dim_reduction,
             "preprocessing": pipeline_name,
             "noise_level": 0.0,
             "seed": seed,
@@ -148,7 +170,7 @@ def run_cross_validation_single(
             "inference_ms_per_doc": round(inference_ms, 4),
         }
 
-        log_result(results_csv, row)
+        log_result(target_csv, row)
         fold_results.append(row)
 
         if metrics["macro_f1"] > best_macro_f1:
@@ -158,13 +180,14 @@ def run_cross_validation_single(
 
     if save_best_model and best_pipeline is not None:
         models_dir.mkdir(parents=True, exist_ok=True)
-        model_filename = f"{model_name}_{representation}_{pipeline_name}.joblib"
+        model_filename = f"{model_name}_{representation}_{dim_reduction}_{pipeline_name}.joblib"
         model_save_path = models_dir / model_filename
         joblib.dump(
             {
                 "pipeline": best_pipeline,
                 "model_name": model_name,
                 "representation": representation,
+                "dim_reduction": dim_reduction,
                 "preprocessing": pipeline_name,
                 "best_fold": best_fold_idx,
                 "best_macro_f1": best_macro_f1,

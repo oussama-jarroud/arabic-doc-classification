@@ -64,6 +64,36 @@ features:
     max_features: 75000
     min_df: 3
     sublinear_tf: true
+  tfidf_word_1_2:
+    ngram_range: [1, 2]
+    max_features: 50000
+    min_df: 2
+    sublinear_tf: true
+  tfidf_word_1_3:
+    ngram_range: [1, 3]
+    max_features: 50000
+    min_df: 2
+    sublinear_tf: true
+  sparse_fusion:
+    word_tfidf:
+      ngram_range: [1, 2]
+      max_features: 50000
+      min_df: 2
+      sublinear_tf: true
+    char_tfidf:
+      analyzer: "char_wb"
+      ngram_range: [3, 5]
+      max_features: 50000
+      min_df: 3
+      sublinear_tf: true
+
+dim_reduction:
+  svd_300:
+    n_components: 300
+    random_state: 42
+  svd_1000:
+    n_components: 1000
+    random_state: 42
 
 classical_models:
   MultinomialNB:
@@ -91,4 +121,9 @@ classical_models:
 classical_experiments:
   results_csv: "results/results_classical.csv"
   models_dir: "models_saved"
+
+feature_experiments:
+  results_csv: "results/results_features.csv"
+  models_dir: "models_saved"
+
 

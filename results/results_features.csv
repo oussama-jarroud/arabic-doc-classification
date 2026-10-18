@@ -1,0 +1,6 @@
+run_id,model,representation,dim_reduction,preprocessing,noise_level,seed,split,accuracy,macro_precision,macro_recall,macro_f1,train_time_sec,inference_ms_per_doc
+LinearSVC_sparse_fusion_none_light_normalized_fold0,LinearSVC,sparse_fusion,none,light_normalized,0.0,42,cv_fold_0,0.982962,0.983018,0.982959,0.982958,243.6078,6.5042
+LinearSVC_sparse_fusion_none_light_normalized_fold1,LinearSVC,sparse_fusion,none,light_normalized,0.0,42,cv_fold_1,0.981451,0.981486,0.981447,0.981435,298.4017,2.5641
+LinearSVC_sparse_fusion_none_light_normalized_fold2,LinearSVC,sparse_fusion,none,light_normalized,0.0,42,cv_fold_2,0.983924,0.983924,0.983922,0.983919,122.0906,5.9197
+LinearSVC_sparse_fusion_none_light_normalized_fold3,LinearSVC,sparse_fusion,none,light_normalized,0.0,42,cv_fold_3,0.982273,0.982297,0.982272,0.982266,159.6457,2.4066
+LinearSVC_sparse_fusion_none_light_normalized_fold4,LinearSVC,sparse_fusion,none,light_normalized,0.0,42,cv_fold_4,0.982548,0.982582,0.982546,0.982547,143.9968,3.1662
