@@ -8,6 +8,7 @@ fonttools==4.67.0
 iniconfig==2.3.1
 joblib==1.6.0
 kiwisolver==1.5.1
+lightgbm==4.7.0
 matplotlib==3.11.2
 narwhals==2.27.1
 nltk==3.10.3
@@ -29,3 +30,4 @@ six==1.17.0
 threadpoolctl==3.7.0
 tqdm==4.70.1
 tzdata==2026.5
+xgboost==3.4.1
