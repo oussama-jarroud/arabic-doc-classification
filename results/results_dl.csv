@@ -1,0 +1,2 @@
+run_id,model,representation,dim_reduction,preprocessing,noise_level,seed,split,accuracy,macro_precision,macro_recall,macro_f1,train_time_sec,inference_ms_per_doc
+ArabicCNN_1D_word_embeddings_none_light_normalized_val,ArabicCNN_1D,word_embeddings,none,light_normalized,0.0,42,dev_val_split,0.972795,0.972887,0.97279,0.972819,172.1938,0.1665

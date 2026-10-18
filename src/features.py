@@ -3,6 +3,7 @@
 from pathlib import Path
 from typing import Any
 
+import numpy as np
 from sklearn.base import BaseEstimator
 from sklearn.decomposition import TruncatedSVD
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
@@ -28,7 +29,8 @@ def build_vectorizer(
     """Build a deterministic scikit-learn text vectorizer or feature union from config.
 
     Extracts word, character n-gram, or multi-representation hybrid features to benchmark
-    sparse lexical representations against dense baselines.
+    sparse lexical representations against dense baselines. Uses float32 precision for
+    halved memory footprint and enhanced vectorization throughput.
     """
     cfg = load_config(config) if isinstance(config, (str, Path)) or config is None else config
     features_cfg: dict[str, Any] = cfg.get("features", {})
@@ -43,6 +45,10 @@ def build_vectorizer(
         fusion_cfg: dict[str, Any] = features_cfg["sparse_fusion"]
         word_params = _clean_ngram_range(fusion_cfg.get("word_tfidf", {}))
         char_params = _clean_ngram_range(fusion_cfg.get("char_tfidf", {}))
+
+        # Default to float32 to conserve memory during large sparse matrix slicing
+        word_params.setdefault("dtype", np.float32)
+        char_params.setdefault("dtype", np.float32)
 
         # Allow kwargs to override sub-transformer parameters if provided
         if "word_tfidf" in kwargs:
@@ -60,6 +66,7 @@ def build_vectorizer(
     if name == "bow":
         return CountVectorizer(**params)
     if name in ("tfidf", "tfidf_char_wb", "tfidf_word_1_2", "tfidf_word_1_3"):
+        params.setdefault("dtype", np.float32)
         return TfidfVectorizer(**params)
 
     raise ValueError(f"No estimator mapping defined for vectorizer key: '{name}'")

@@ -1,0 +1,28 @@
+================================================================================
+MCNEMAR STATISTICAL SIGNIFICANCE TESTS ON HELD-OUT TEST SPLIT (N=9,097)
+================================================================================
+
+Comparison: StackingEnsemble vs. ArabicCNN_1D
+------------------------------------------------------------
+  Contingency Table (2x2):
+    Both Correct (n00)                       : 8797
+    StackingEnsemble Correct, ArabicCNN_1D Incorrect (n01): 151
+    StackingEnsemble Incorrect, ArabicCNN_1D Correct (n10): 45
+    Both Incorrect (n11)                     : 104
+  McNemar Chi2 (Edwards CC)             : 56.2500
+  Chi-Square Asymptotic p-value               : 6.3838e-14
+  Exact Two-Sided Binomial p-value            : 1.3858e-14
+  Conclusion at alpha = 0.05                  : STATISTICALLY SIGNIFICANT (p < 0.05)
+
+Comparison: StackingEnsemble vs. LinearSVC
+------------------------------------------------------------
+  Contingency Table (2x2):
+    Both Correct (n00)                       : 8922
+    StackingEnsemble Correct, LinearSVC Incorrect (n01): 26
+    StackingEnsemble Incorrect, LinearSVC Correct (n10): 26
+    Both Incorrect (n11)                     : 123
+  McNemar Chi2 (Edwards CC)             : 0.0192
+  Chi-Square Asymptotic p-value               : 8.8971e-01
+  Exact Two-Sided Binomial p-value            : 1.0000e+00
+  Conclusion at alpha = 0.05                  : NOT SIGNIFICANT (p >= 0.05)
+
