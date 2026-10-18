@@ -28,6 +28,7 @@ scikit-learn==1.9.1
 scipy==1.18.1
 six==1.17.0
 threadpoolctl==3.7.0
+torch==2.14.1
 tqdm==4.70.1
 tzdata==2026.5
 xgboost==3.4.1

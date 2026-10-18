@@ -164,5 +164,25 @@ advanced_experiments:
   results_csv: "results/results_advanced.csv"
   models_dir: "models_saved"
 
+deep_learning:
+  model_name: "ArabicCNN_1D"
+  representation: "word_embeddings"
+  vocab_size: 50000
+  embedding_dim: 128
+  num_filters: 128
+  filter_sizes:
+    - 3
+    - 5
+    - 7
+  dropout: 0.5
+  max_len: 512
+  batch_size: 64
+  learning_rate: 0.001
+  epochs: 15
+  early_stopping_patience: 3
+  results_csv: "results/results_dl.csv"
+  models_dir: "models_saved"
+
+
 
 

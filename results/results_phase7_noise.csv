@@ -1,0 +1,13 @@
+model,representation,noise_level,accuracy,macro_f1
+LinearSVC,sparse_fusion,0.0,0.983621,0.983624
+StackingEnsemble,sparse_fusion,0.0,0.983621,0.983623
+ArabicCNN_1D,word_embeddings,0.0,0.971969,0.97201
+LinearSVC,sparse_fusion,0.05,0.982082,0.982084
+StackingEnsemble,sparse_fusion,0.05,0.982961,0.982963
+ArabicCNN_1D,word_embeddings,0.05,0.968011,0.96808
+LinearSVC,sparse_fusion,0.1,0.982192,0.982194
+StackingEnsemble,sparse_fusion,0.1,0.982851,0.982853
+ArabicCNN_1D,word_embeddings,0.1,0.964054,0.964181
+LinearSVC,sparse_fusion,0.2,0.980873,0.98088
+StackingEnsemble,sparse_fusion,0.2,0.980543,0.980546
+ArabicCNN_1D,word_embeddings,0.2,0.938881,0.939197
