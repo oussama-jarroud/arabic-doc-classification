@@ -1,25 +1,8 @@
-# Virtual Env & Caches
+__pycache__/
+*.pyc
 .venv/
 venv/
-__pycache__/
-*.py[cod]
-.pytest_cache/
-.ruff_cache/
-.mypy_cache/
-
-# Raw & Processed Data (keep .gitkeep, ignore actual data files)
-data/raw/*
-!data/raw/.gitkeep
-data/processed/*
-!data/processed/.gitkeep
-
-# Saved Models
-models_saved/*.joblib
-models_saved/*.pkl
-models_saved/*.pt
-
-# IDE & OS
-.vscode/
-.idea/
+.env
+.ipynb_checkpoints/
 .DS_Store
-Thumbs.db
+*.log
